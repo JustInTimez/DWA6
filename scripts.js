@@ -356,31 +356,40 @@ page += 1
 
 
 
+/**
+ * Listen for click events on the list items container and display
+ * detailed information about the clicked item.
+ *
+ * @param {MouseEvent} event - The click event object.
+ */
 document.querySelector('[data-list-items]').addEventListener('click', (event) => {
-    const pathArray = Array.from(event.path || event.composedPath())
-    let active = null
+const pathArray = Array.from(event.path || event.composedPath())
+let active = null
 
-    for (const node of pathArray) {
-        if (active) break
+// Find the clicked item by searching for a data-preview attribute in the clicked node or its parents.
+for (const node of pathArray) {
+    if (active) break
 
-        if (node?.dataset?.preview) {
-            let result = null
+    if (node?.dataset?.preview) {
+    // Find the book with the matching ID.
+    let result = null
+    for (const singleBook of books) {
+        if (result) break;
+        if (singleBook.id === node?.dataset?.preview) result = singleBook
+    } 
     
-            for (const singleBook of books) {
-                if (result) break;
-                if (singleBook.id === node?.dataset?.preview) result = singleBook
-            } 
-        
-            active = result
-        }
+    active = result
     }
-    
-    if (active) {
-        document.querySelector('[data-list-active]').open = true
-        document.querySelector('[data-list-blur]').src = active.image
-        document.querySelector('[data-list-image]').src = active.image
-        document.querySelector('[data-list-title]').innerText = active.title
-        document.querySelector('[data-list-subtitle]').innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`
-        document.querySelector('[data-list-description]').innerText = active.description
-    }
+}
+
+// If a matching book was found, update the active book display with its information.
+if (active) {
+    document.querySelector('[data-list-active]').open = true
+    document.querySelector('[data-list-blur]').src = active.image
+    document.querySelector('[data-list-image]').src = active.image
+    document.querySelector('[data-list-title]').innerText = active.title
+    document.querySelector('[data-list-subtitle]').innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`
+    document.querySelector('[data-list-description]').innerText = active.description
+}
 })
+  
