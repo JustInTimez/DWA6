@@ -128,21 +128,43 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
 
 
 
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
+/**
+ * Updates the show more button text and disabled state based on the current search results.
+ *
+ * @param {number} page - The current page number.
+ * @param {number} BOOKS_PER_PAGE - The number of books to show per page.
+ * @param {number} booksLength - The total number of books.
+ * @param {Array} matches - An array of book IDs that match the current search criteria.
+ */
+function updateShowMoreButton(page, BOOKS_PER_PAGE, booksLength, matches) {
+const showMoreButton = document.querySelector('[data-list-button]');
+const remainingBooks = booksLength - (page * BOOKS_PER_PAGE);
 
-document.querySelector('[data-list-button]').innerHTML = `
-    <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`
+showMoreButton.innerText = `Show more (${remainingBooks})`;
+showMoreButton.disabled = remainingBooks <= 0 || remainingBooks < matches.length;
+}
 
+/**
+ * Adds event listeners for the search and settings overlays.
+ */
+function addEventListeners() {
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = false
-})
+    document.querySelector('[data-search-overlay]').open = false;
+});
 
 document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = false
-})
+    document.querySelector('[data-settings-overlay]').open = false;
+});
+}
+
+// Call the functions to execute the code
+updateShowMoreButton(page, BOOKS_PER_PAGE, books.length, matches);
+addEventListeners();
+
+
+
+
+
 
 document.querySelector('[data-header-search]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = true 
@@ -172,6 +194,9 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
     
     document.querySelector('[data-settings-overlay]').open = false
 })
+
+
+
 
 document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
     event.preventDefault()
