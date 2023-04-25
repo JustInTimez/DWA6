@@ -166,19 +166,47 @@ addEventListeners();
 
 
 
-document.querySelector('[data-header-search]').addEventListener('click', () => {
+/**
+ * Adds an event listener to the search button, which opens the search overlay
+ * and focuses on the search input field.
+ *
+ * @function
+ * @name handleSearchButtonClick
+ */
+ document.querySelector('[data-header-search]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = true 
     document.querySelector('[data-search-title]').focus()
 })
 
+/**
+ * Adds an event listener to the settings button, which opens the settings overlay.
+ *
+ * @function
+ * @name handleSettingsButtonClick
+ */
 document.querySelector('[data-header-settings]').addEventListener('click', () => {
     document.querySelector('[data-settings-overlay]').open = true 
 })
 
+/**
+ * Adds an event listener to the list close button, which closes the active list overlay.
+ *
+ * @function
+ * @name handleListCloseButtonClick
+ */
 document.querySelector('[data-list-close]').addEventListener('click', () => {
     document.querySelector('[data-list-active]').open = false
 })
 
+/**
+ * Adds an event listener to the settings form, which prevents the default form submission
+ * behavior, gets the selected theme from the form data, and sets the CSS variables accordingly.
+ * Finally, it closes the settings overlay.
+ *
+ * @function
+ * @name handleSettingsFormSubmit
+ * @param {Event} event - The form submission event.
+ */
 document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
