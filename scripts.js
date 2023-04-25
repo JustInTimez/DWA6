@@ -305,32 +305,56 @@ document.querySelector('[data-search-overlay]').open = false;
 
 
 
+
+
+/**
+ * Adds an event listener to the "Show more" button that renders more book previews
+ * @event click
+ */
 document.querySelector('[data-list-button]').addEventListener('click', () => {
-    const fragment = document.createDocumentFragment()
+// Create a new document fragment to hold the new book preview elements
+const fragment = document.createDocumentFragment()
 
-    for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
-        const element = document.createElement('button')
-        element.classList = 'preview'
-        element.setAttribute('data-preview', id)
+// Iterate over a slice of the "matches" array that corresponds to the current page of previews
+for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
+    // Create a new button element for each book preview
+    const element = document.createElement('button')
+    element.classList = 'preview'
+    element.setAttribute('data-preview', id)
+
+    // Set the button's inner HTML to the book preview template, populated with book data
+    element.innerHTML = `
+    <img
+        class="preview__image"
+        src="${image}"
+    />
     
-        element.innerHTML = `
-            <img
-                class="preview__image"
-                src="${image}"
-            />
-            
-            <div class="preview__info">
-                <h3 class="preview__title">${title}</h3>
-                <div class="preview__author">${authors[author]}</div>
-            </div>
-        `
+    <div class="preview__info">
+        <h3 class="preview__title">${title}</h3>
+        <div class="preview__author">${authors[author]}</div>
+    </div>
+    `
 
-        fragment.appendChild(element)
-    }
+    // Append the new button element to the document fragment
+    fragment.appendChild(element)
+}
 
-    document.querySelector('[data-list-items]').appendChild(fragment)
-    page += 1
+// Append the document fragment to the list of book previews
+document.querySelector('[data-list-items]').appendChild(fragment)
+
+// Increment the current page of book previews
+page += 1
 })
+  
+
+
+
+
+
+
+
+
+
 
 document.querySelector('[data-list-items]').addEventListener('click', (event) => {
     const pathArray = Array.from(event.path || event.composedPath())
