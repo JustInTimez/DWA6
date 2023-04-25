@@ -69,7 +69,7 @@ for (const [id, name] of Object.entries(genres)) {
 
 document.querySelector('[data-search-genres]').appendChild(genreHtml);
 }
-
+createGenreOptions(genres)
 
 
 
@@ -101,7 +101,7 @@ function generateAuthorOptions(authors) {
   // Append the fragment to the DOM
   document.querySelector('[data-search-authors]').appendChild(authorsHtml);
 }
-
+generateAuthorOptions(authors)
 
 
 
@@ -392,4 +392,3 @@ if (active) {
     document.querySelector('[data-list-description]').innerText = active.description
 }
 })
-  
