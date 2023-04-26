@@ -150,83 +150,68 @@ function updateShowMoreButton(page, BOOKS_PER_PAGE, booksLength, matches) {
 
 
 /**
+ * All listeners
  * Adds event listeners for the search and settings overlays.
  */
 function addEventListeners() {
+  // Search overlay
   document
     .querySelector("[data-search-cancel]")
     .addEventListener("click", () => {
       document.querySelector("[data-search-overlay]").open = false;
     });
 
+  // Settings overlay
   document
     .querySelector("[data-settings-cancel]")
     .addEventListener("click", () => {
       document.querySelector("[data-settings-overlay]").open = false;
     });
-}
 
-// Call the functions to execute the code
-updateShowMoreButton(page, BOOKS_PER_PAGE, books.length, matches);
-console.log(updateShowMoreButton);
-addEventListeners();
+  /**
+   * Adds an event listener to the search button, which opens the search overlay
+   * and focuses on the search input field.
+   *
+   * @function
+   * @name handleSearchButtonClick
+   */
+  document.querySelector("[data-header-search]").addEventListener("click", () => {
+    document.querySelector("[data-search-overlay]").open = true;
+    document.querySelector("[data-search-title]").focus();
+  });
 
-
-
-
-/**
- * Adds an event listener to the search button, which opens the search overlay
- * and focuses on the search input field.
- *
- * @function
- * @name handleSearchButtonClick
- */
-document.querySelector("[data-header-search]").addEventListener("click", () => {
-  document.querySelector("[data-search-overlay]").open = true;
-  document.querySelector("[data-search-title]").focus();
-});
-
-
-
-
-/**
- * Adds an event listener to the settings button, which opens the settings overlay.
- *
- * @function
- * @name handleSettingsButtonClick
- */
-document
+  /**
+   * Adds an event listener to the settings button, which opens the settings overlay.
+   *
+   * @function
+   * @name handleSettingsButtonClick
+   */
+  document
   .querySelector("[data-header-settings]")
   .addEventListener("click", () => {
     document.querySelector("[data-settings-overlay]").open = true;
   });
 
+  /**
+   * Adds an event listener to the list close button, which closes the active list overlay.
+   *
+   * @function
+   * @name handleListCloseButtonClick
+   */
+  document.querySelector("[data-list-close]").addEventListener("click", () => {
+    document.querySelector("[data-list-active]").open = false;
+  });
 
-
-
-/**
- * Adds an event listener to the list close button, which closes the active list overlay.
- *
- * @function
- * @name handleListCloseButtonClick
- */
-document.querySelector("[data-list-close]").addEventListener("click", () => {
-  document.querySelector("[data-list-active]").open = false;
-});
-
-
-
-
-/**
- * Adds an event listener to the settings form, which prevents the default form submission
- * behavior, gets the selected theme from the form data, and sets the CSS variables accordingly.
- * Finally, it closes the settings overlay.
- *
- * @function
- * @name handleSettingsFormSubmit
- * @param {Event} event - The form submission event.
- */
-document
+  /**
+   * Adds an event listener to the settings form, which prevents the default form submission
+   * behavior, gets the selected theme from the form data, and sets the CSS variables accordingly.
+   * Finally, it closes the settings overlay.
+   *
+   * @function
+   * @name handleSettingsFormSubmit
+   * @param {Event} event - The form submission event.
+   */
+  document
   .querySelector("[data-settings-form]")
   .addEventListener("submit", (event) => {
     event.preventDefault();
@@ -250,14 +235,11 @@ document
     document.querySelector("[data-settings-overlay]").open = false;
   });
 
-
-
-
-/**
- * Handles form submission for book search and updates the results display.
- * @param {Event} event - The submit event.
- */
-document
+  /**
+   * Handles form submission for book search and updates the results display.
+   * @param {Event} event - The submit event.
+   */
+  document
   .querySelector("[data-search-form]")
   .addEventListener("submit", (event) => {
     event.preventDefault();
@@ -326,67 +308,61 @@ document
         : 0
     })
     </span>
-`;
+  `;
 
     window.scrollTo({ top: 0, behavior: "smooth" });
     document.querySelector("[data-search-overlay]").open = false;
   });
 
+  /**
+   * Adds an event listener to the "Show more" button that renders more book previews
+   * @event click
+   */
+  document.querySelector("[data-list-button]").addEventListener("click", () => {
+    // Create a new document fragment to hold the new book preview elements
+    const fragment = document.createDocumentFragment();
 
+    // Iterate over a slice of the "matches" array that corresponds to the current page of previews
+    for (const { author, id, image, title } of matches.slice(
+      page * BOOKS_PER_PAGE,
+      (page + 1) * BOOKS_PER_PAGE
+    )) {
+      // Create a new button element for each book preview
+      const element = document.createElement("button");
+      element.classList = "preview";
+      element.setAttribute("data-preview", id);
 
+      // Set the button's inner HTML to the book preview template, populated with book data
+      element.innerHTML = `
+      <img
+          class="preview__image"
+          src="${image}"
+      />
+      
+      <div class="preview__info">
+          <h3 class="preview__title">${title}</h3>
+          <div class="preview__author">${authors[author]}</div>
+      </div>
+      `;
 
-/**
- * Adds an event listener to the "Show more" button that renders more book previews
- * @event click
- */
-document.querySelector("[data-list-button]").addEventListener("click", () => {
-  // Create a new document fragment to hold the new book preview elements
-  const fragment = document.createDocumentFragment();
+      // Append the new button element to the document fragment
+      fragment.appendChild(element);
+    }
 
-  // Iterate over a slice of the "matches" array that corresponds to the current page of previews
-  for (const { author, id, image, title } of matches.slice(
-    page * BOOKS_PER_PAGE,
-    (page + 1) * BOOKS_PER_PAGE
-  )) {
-    // Create a new button element for each book preview
-    const element = document.createElement("button");
-    element.classList = "preview";
-    element.setAttribute("data-preview", id);
+    // Append the document fragment to the list of book previews
+    document.querySelector("[data-list-items]").appendChild(fragment);
 
-    // Set the button's inner HTML to the book preview template, populated with book data
-    element.innerHTML = `
-    <img
-        class="preview__image"
-        src="${image}"
-    />
-    
-    <div class="preview__info">
-        <h3 class="preview__title">${title}</h3>
-        <div class="preview__author">${authors[author]}</div>
-    </div>
-    `;
+    // Increment the current page of book previews
+    page += 1;
+  });
 
-    // Append the new button element to the document fragment
-    fragment.appendChild(element);
-  }
-
-  // Append the document fragment to the list of book previews
-  document.querySelector("[data-list-items]").appendChild(fragment);
-
-  // Increment the current page of book previews
-  page += 1;
-});
-
-
-
-
-/**
- * Listen for click events on the list items container and display
- * detailed information about the clicked item.
- *
- * @param {MouseEvent} event - The click event object.
- */
-document
+  /**
+   * Listen for click events on the list items container and display
+   * detailed information about the clicked item.
+   *
+   * @param {MouseEvent} event - The click event object.
+   */
+  document
   .querySelector("[data-list-items]")
   .addEventListener("click", (event) => {
     const pathArray = Array.from(event.path || event.composedPath());
@@ -421,3 +397,9 @@ document
         active.description;
     }
   });
+}
+
+// Call the functions to execute the code
+updateShowMoreButton(page, BOOKS_PER_PAGE, books.length, matches);
+console.log(updateShowMoreButton);
+addEventListeners();
