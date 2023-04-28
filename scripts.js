@@ -163,8 +163,6 @@ function updateShowMoreButton(page, BOOKS_PER_PAGE, booksLength, matches) {
     remainingBooks <= 0 || remainingBooks < matches.length;
 }
 
-
-
 // Call the functions to execute the code
 updateShowMoreButton(page, BOOKS_PER_PAGE, books.length, matches);
 addEventListeners();
