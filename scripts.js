@@ -45,8 +45,6 @@ document.querySelector("[data-list-items]").appendChild(starting);
 
 
 
-
-
 /**
  * Create and append genre options to the search form.
  * @param {Object} genres - The genres object containing id-name pairs.
@@ -68,8 +66,6 @@ function createGenreOptions(genres) {
   document.querySelector("[data-search-genres]").appendChild(genreHtml);
 }
 createGenreOptions(genres);
-
-
 
 
 
@@ -103,7 +99,6 @@ generateAuthorOptions(authors);
 
 
 
-
 /**
  * Check the user's preferred color scheme and set the appropriate theme.
  */
@@ -126,7 +121,7 @@ function setTheme() {
     );
   }
 }
-
+setTheme();
 
 
 
@@ -151,5 +146,5 @@ function updateShowMoreButton(page, BOOKS_PER_PAGE, booksLength, matches) {
 
 // Call the functions to execute the code
 updateShowMoreButton(page, BOOKS_PER_PAGE, books.length, matches);
-console.log(updateShowMoreButton);
+
 addEventListeners();

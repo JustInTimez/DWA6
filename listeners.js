@@ -1,3 +1,5 @@
+import { books, authors, BOOKS_PER_PAGE } from "./data.js";
+
 /**
  * All listeners
  * Adds event listeners for the search and settings overlays.
