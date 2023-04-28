@@ -4,8 +4,6 @@ import { addEventListeners } from './listeners.js';
 let page = 1;
 let matches = books;
 
-
-
 /**
  * Book previews object that renders the display of the books
  */
@@ -51,55 +49,73 @@ BookPreviewRenderer.renderBookPreviews(matches, BOOKS_PER_PAGE);
 
 
 /**
- * Create and append genre options to the search form.
- * @param {Object} genres - The genres object containing id-name pairs.
+ * Search form object with genre options.
+ * @typedef {Object} SearchForm
+ * @property {Object} genres - The genres object
  */
-function createGenreOptions(genres) {
-  const genreHtml = document.createDocumentFragment();
-  const firstGenreElement = document.createElement("option");
-  firstGenreElement.value = "any";
-  firstGenreElement.innerText = "All Genres";
-  genreHtml.appendChild(firstGenreElement);
+ const searchForm = {
+  /**
+   * Create and append genre options to the search form.
+   * @param {Object} genres - The genres object containing id-name pairs.
+   */
+  createGenreOptions (genres) {
+    const genreHtml = document.createDocumentFragment();
+    const firstGenreElement = document.createElement("option");
+    firstGenreElement.value = "any";
+    firstGenreElement.innerText = "All Genres";
+    genreHtml.appendChild(firstGenreElement);
 
-  for (const [id, name] of Object.entries(genres)) {
-    const element = document.createElement("option");
-    element.value = id;
-    element.innerText = name;
-    genreHtml.appendChild(element);
+    for (const [id, name] of Object.entries(genres)) {
+      const element = document.createElement("option");
+      element.value = id;
+      element.innerText = name;
+      genreHtml.appendChild(element);
+    }
+
+    document.querySelector("[data-search-genres]").appendChild(genreHtml);
   }
-
-  document.querySelector("[data-search-genres]").appendChild(genreHtml);
 }
-createGenreOptions(genres);
+
+// Call the method to create genre options
+searchForm.createGenreOptions(genres);
 
 
 
 /**
- * Generates HTML options for authors and appends them to the DOM.
- *
- * @param {Object} authors - Object containing authors' IDs and names
+ * Author form object with author options  
+ * @typedef {Object} AuthorOptions
+ * @property {Function} generate - Generates and appends author to the DOM
  */
-function generateAuthorOptions(authors) {
-  const authorsHtml = document.createDocumentFragment();
 
-  // Create the first "All Authors" option
-  const firstAuthorElement = document.createElement("option");
-  firstAuthorElement.value = "any";
-  firstAuthorElement.innerText = "All Authors";
-  authorsHtml.appendChild(firstAuthorElement);
+ const authorOptions = {
+  /**
+   * Generates authors and appends them to the DOM.
+   * @param {Object} authors - Object containing authors' IDs and names
+   */
+  generate(authors) {
+    const authorsHtml = document.createDocumentFragment();
 
-  // Create an option element for each author and add it to the fragment
-  for (const [id, name] of Object.entries(authors)) {
-    const element = document.createElement("option");
-    element.value = id;
-    element.innerText = name;
-    authorsHtml.appendChild(element);
+    // Create the first "All Authors" option
+    const firstAuthorElement = document.createElement("option");
+    firstAuthorElement.value = "any";
+    firstAuthorElement.innerText = "All Authors";
+    authorsHtml.appendChild(firstAuthorElement);
+
+    // Create an option element for each author and add it to the fragment
+    for (const [id, name] of Object.entries(authors)) {
+      const element = document.createElement("option");
+      element.value = id;
+      element.innerText = name;
+      authorsHtml.appendChild(element);
+    }
+
+    // Append the fragment to the DOM
+    document.querySelector("[data-search-authors]").appendChild(authorsHtml);
   }
+};
 
-  // Append the fragment to the DOM
-  document.querySelector("[data-search-authors]").appendChild(authorsHtml);
-}
-generateAuthorOptions(authors);
+// Call the method to generate and append author options
+authorOptions.generate(authors);
 
 
 
@@ -151,5 +167,4 @@ function updateShowMoreButton(page, BOOKS_PER_PAGE, booksLength, matches) {
 
 // Call the functions to execute the code
 updateShowMoreButton(page, BOOKS_PER_PAGE, books.length, matches);
-
 addEventListeners();

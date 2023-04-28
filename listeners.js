@@ -5,6 +5,7 @@ import { books, authors, BOOKS_PER_PAGE } from "./data.js";
  * Adds event listeners for the search and settings overlays.
  */
 export function addEventListeners() {
+
   // Search overlay
   document
     .querySelector("[data-search-cancel]")
@@ -128,8 +129,8 @@ export function addEventListeners() {
       }
 
       // Update results display.
-      page = 1;
-      matches = result;
+      let page = 1;
+      let matches = result;
 
       const listMessage = document.querySelector("[data-list-message]");
       listMessage.classList.toggle("list__message_show", result.length < 1);
