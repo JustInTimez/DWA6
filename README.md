@@ -1,3 +1,11 @@
+# DWA8
+DWA8 Challenge from CodeSpace:
+This repo has been updated to include the next section on DWA8 as it builds on from DWA6.
+
+## Description
+In this Module, you will continue with your “Book Connect” codebase, and further iterate on your abstractions. You will be required to create an encapsulated abstraction of the book preview by means of a single factory function. If you are up for it you can also encapsulate other aspects of the app into their own abstractions.
+
+
 # DWA6
 DWA 6 Challenge from CodeSpace:
 

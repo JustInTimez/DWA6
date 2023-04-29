@@ -3,7 +3,7 @@ import { addEventListeners } from './listeners.js';
 
 
 let page = 1;
-let matches = books;
+export let matches = books;
 
 /**
  * Book previews object that renders the display of the books
@@ -145,3 +145,5 @@ authorOptions.generate(authors);
 // Call the functions to execute the code
 showMoreButton.update(page, BOOKS_PER_PAGE, books.length, matches);
 addEventListeners();
+
+export { page };
