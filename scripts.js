@@ -8,7 +8,7 @@ export let matches = books;
 /**
  * Book previews object that renders the display of the books
  */
- const BookPreviewRenderer = {
+ function createPreviewRenderer() {
   /**
    * Renders a set of book previews onto the page.
    * @param {Object[]} matches - The list of books to render previews for.
@@ -18,35 +18,39 @@ export let matches = books;
    * @param {string} matches[].title - The title of the book.
    * @param {number} numPerPage - The number of book previews to render per page.
    */
-  renderBookPreviews(matches, numPerPage) {
-    const starting = document.createDocumentFragment();
-    // Only render the first numPerPage matches
-    for (const { author, id, image, title } of matches.slice(0, numPerPage)) {
-      const element = document.createElement("button");
-      element.classList = "preview";
-      element.setAttribute("data-preview", id);
+  return {
+    renderBookPreviews(matches, numPerPage) {
+      const starting = document.createDocumentFragment();
+      // Only render the first numPerPage matches
+      for (const { author, id, image, title } of matches.slice(0, numPerPage)) {
+        const element = document.createElement("button");
+        element.classList = "preview";
+        element.setAttribute("data-preview", id);
 
-      element.innerHTML = `
+        element.innerHTML = `
           <img
-              class="preview__image"
-              src="${image}"
+            class="preview__image"
+            src="${image}"
           />
           
           <div class="preview__info">
-              <h3 class="preview__title">${title}</h3>
-              <div class="preview__author">${authors[author]}</div>
+            <h3 class="preview__title">${title}</h3>
+            <div class="preview__author">${authors[author]}</div>
           </div>
-      `;
+        `;
 
-      starting.appendChild(element);
+        starting.appendChild(element);
+      }
+      document.querySelector("[data-list-items]").appendChild(starting);
     }
-    document.querySelector("[data-list-items]").appendChild(starting);
   }
 }
 
+// Create a BookPreviewRenderer object using the factory function
+const BookPreviewRenderer = createPreviewRenderer();
+
 // Call the function to render the book previews
 BookPreviewRenderer.renderBookPreviews(matches, BOOKS_PER_PAGE);
-
 
 
 /**
