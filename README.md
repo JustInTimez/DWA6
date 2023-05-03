@@ -1,5 +1,6 @@
-# DWA10
-
+# DWA9 (10)
+In this challenge, I will continue with the “Book Connect” codebase and further iterate on my abstractions.
+Previously, I worked on adding abstraction around the book preview functionality of the project. Next, you must turn the book preview abstraction into a fully-working web component. Then, apply the techniques you’ve learned about this module to the book preview.
 
 # DWA8
 DWA8 Challenge from CodeSpace:
