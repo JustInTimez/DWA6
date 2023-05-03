@@ -31,7 +31,7 @@ class BookPreviewRenderer {
             
             <div class="preview__info">
               <h3 class="preview__title">${title}</h3>
-              <div class="preview__author">${authors[author]}</div>
+              <div class="preview__author">${this.authors[author]}</div>
             </div>
           `;
 
