@@ -1,15 +1,16 @@
-/**
- * Author form object with author options  
- * @typedef {Object} AuthorOptions
- * @property {Function} generate - Generates and appends author to the DOM
- */
-
-const authorOptions = {
+class AuthorsForm {
     /**
-     * Generates authors and appends them to the DOM.
+     * Creates an AuthorsForm instance.
      * @param {Object} authors - Object containing authors' IDs and names
      */
-    generate(authors) {
+    constructor(authors) {
+      this.authors = authors;
+    }
+  
+    /**
+     * Generates and appends author options to the DOM.
+     */
+    generate() {
       const authorsHtml = document.createDocumentFragment();
   
       // Create the first "All Authors" option
@@ -19,7 +20,7 @@ const authorOptions = {
       authorsHtml.appendChild(firstAuthorElement);
   
       // Create an option element for each author and add it to the fragment
-      for (const [id, name] of Object.entries(authors)) {
+      for (const [id, name] of Object.entries(this.authors)) {
         const element = document.createElement("option");
         element.value = id;
         element.innerText = name;
@@ -29,6 +30,6 @@ const authorOptions = {
       // Append the fragment to the DOM
       document.querySelector("[data-search-authors]").appendChild(authorsHtml);
     }
-  };
-  // Call the method to generate and append author options
-  authorOptions.generate(authors);
+  }
+  
+  export { AuthorsForm };  

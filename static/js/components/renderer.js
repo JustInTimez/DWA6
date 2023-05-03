@@ -2,8 +2,8 @@ class BookPreviewRenderer {
   /**
    * Creates a BookPreviewRenderer instance
    */
-  constructor() {
-    // Empty constructor as I don't have variables for this
+  constructor(authors) {
+    this.authors = authors;
   }
 
   /**
