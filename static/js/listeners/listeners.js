@@ -1,108 +1,79 @@
 import { books, authors, BOOKS_PER_PAGE } from '/static/js/information/data.js';
 import { matches, page } from '../scripts.js';
 
-/**
- * All listeners
- * Adds event listeners for the search and settings overlays.
- */
-export function addEventListeners() {
+class EventListenerManager {
+  constructor() {
+    this.listeners = [
+      new SearchOverlayListener(),
+      new SettingsOverlayListener(),
+      new ListCloseButtonListener(),
+      new SettingsFormListener(),
+      new BookSearchListener(),
+      new ShowMoreListener(),
+    ];
+  }
+}
 
-  // Search overlay
-  document
-    .querySelector("[data-search-cancel]")
-    .addEventListener("click", () => {
-      document.querySelector("[data-search-overlay]").open = false;
+new EventListenerManager();
+
+
+class EventListener {
+  constructor(selector, callback) {
+    this.element = document.querySelector(selector);
+    if (this.element) {
+      this.element.addEventListener('click', callback);
+    }
+  }
+}
+
+class SearchOverlayListener extends EventListener {
+  constructor() {
+    super('[data-header-search]', () => {
+      document.querySelector('[data-search-overlay]').open = true;
+      document.querySelector('[data-search-title]').focus();
     });
+  }
+}
 
-  // Settings overlay
-  document
-    .querySelector("[data-settings-cancel]")
-    .addEventListener("click", () => {
-      document.querySelector("[data-settings-overlay]").open = false;
+class SettingsOverlayListener extends EventListener {
+  constructor() {
+    super('[data-header-settings]', () => {
+      document.querySelector('[data-settings-overlay]').open = true;
     });
+  }
+}
 
-  /**
-   * Adds an event listener to the search button, which opens the search overlay
-   * and focuses on the search input field.
-   *
-   * @function
-   * @name handleSearchButtonClick
-   */
-  document
-    .querySelector("[data-header-search]")
-    .addEventListener("click", () => {
-      document.querySelector("[data-search-overlay]").open = true;
-      document.querySelector("[data-search-title]").focus();
+class ListCloseButtonListener extends EventListener {
+  constructor() {
+    super('[data-list-close]', () => {
+      document.querySelector('[data-list-active]').open = false;
     });
+  }
+}
 
-  /**
-   * Adds an event listener to the settings button, which opens the settings overlay.
-   *
-   * @function
-   * @name handleSettingsButtonClick
-   */
-  document
-    .querySelector("[data-header-settings]")
-    .addEventListener("click", () => {
-      document.querySelector("[data-settings-overlay]").open = true;
-    });
-
-  /**
-   * Adds an event listener to the list close button, which closes the active list overlay.
-   *
-   * @function
-   * @name handleListCloseButtonClick
-   */
-  document.querySelector("[data-list-close]").addEventListener("click", () => {
-    document.querySelector("[data-list-active]").open = false;
-  });
-
-  /**
-   * Adds an event listener to the settings form, which prevents the default form submission
-   * behavior, gets the selected theme from the form data, and sets the CSS variables accordingly.
-   * Finally, it closes the settings overlay.
-   *
-   * @function
-   * @name handleSettingsFormSubmit
-   * @param {Event} event - The form submission event.
-   */
-  document
-    .querySelector("[data-settings-form]")
-    .addEventListener("submit", (event) => {
+class SettingsFormListener extends EventListener {
+  constructor() {
+    super('[data-settings-form]', (event) => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const { theme } = Object.fromEntries(formData);
 
-      if (theme === "night") {
-        document.documentElement.style.setProperty(
-          "--color-dark",
-          "255, 255, 255"
-        );
-        document.documentElement.style.setProperty(
-          "--color-light",
-          "10, 10, 20"
-        );
+      if (theme === 'night') {
+        document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
+        document.documentElement.style.setProperty('--color-light', '10, 10, 20');
       } else {
-        document.documentElement.style.setProperty(
-          "--color-dark",
-          "10, 10, 20"
-        );
-        document.documentElement.style.setProperty(
-          "--color-light",
-          "255, 255, 255"
-        );
+        document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
+        document.documentElement.style.setProperty('--color-light', '255, 255, 255');
       }
 
-      document.querySelector("[data-settings-overlay]").open = false;
+      document.querySelector('[data-settings-overlay]').open = false;
     });
+  }
+}
 
-  /**
-   * Handles form submission for book search and updates the results display.
-   * @param {Event} event - The submit event.
-   */
-  document
-    .querySelector("[data-search-form]")
-    .addEventListener("submit", (event) => {
+class BookSearchListener extends EventListener {
+  constructor() {
+    super('[data-search-form]', (event) => {
       event.preventDefault();
 
       // Extract form data and convert it to an object.
@@ -174,19 +145,34 @@ export function addEventListeners() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       document.querySelector("[data-search-overlay]").open = false;
     });
+  }
+}
+
+class ShowMoreListener {
+  constructor() {
+    // Add event listener to the "Show more" button
+    document.querySelector("[data-list-button]").addEventListener("click", this.showMore);
+    
+    // Add event listener to the book previews container
+    document.querySelector("[data-list-items]").addEventListener("click", this.showDetails);
+    
+    // Initial page of book previews
+    this.page = 0;
+  }
 
   /**
-   * Adds an event listener to the "Show more" button that renders more book previews
-   * @event click
+   * Renders more book previews to the page.
+   *
+   * @param {MouseEvent} event - The click event object.
    */
-   document.querySelector("[data-list-button]").addEventListener("click", () => {
+  showMore = (event) => {
     // Create a new document fragment to hold the new book preview elements
     const fragment = document.createDocumentFragment();
   
     // Iterate over a slice of the "matches" array that corresponds to the current page of previews
     for (const { author, id, image, title } of matches.slice(
-      page * BOOKS_PER_PAGE,
-      (page + 1) * BOOKS_PER_PAGE
+      this.page * BOOKS_PER_PAGE,
+      (this.page + 1) * BOOKS_PER_PAGE
     )) {
       // Create a new button element for each book preview
       const element = document.createElement("button");
@@ -214,48 +200,45 @@ export function addEventListeners() {
     document.querySelector("[data-list-items]").appendChild(fragment);
   
     // Increment the current page of book previews
-    page += 1;
-  });
+    this.page += 1;
+  };
 
   /**
-   * Listen for click events on the list items container and display
-   * detailed information about the clicked item.
+   * Displays detailed information about the clicked book preview.
    *
    * @param {MouseEvent} event - The click event object.
    */
-  document
-    .querySelector("[data-list-items]")
-    .addEventListener("click", (event) => {
-      const pathArray = Array.from(event.path || event.composedPath());
-      let active = null;
+  showDetails = (event) => {
+    const pathArray = Array.from(event.path || event.composedPath());
+    let active = null;
 
-      // Find the clicked item by searching for a data-preview attribute in the clicked node or its parents.
-      for (const node of pathArray) {
-        if (active) break;
+    // Find the clicked item by searching for a data-preview attribute in the clicked node or its parents.
+    for (const node of pathArray) {
+      if (active) break;
 
-        if (node?.dataset?.preview) {
-          // Find the book with the matching ID.
-          let result = null;
-          for (const singleBook of books) {
-            if (result) break;
-            if (singleBook.id === node?.dataset?.preview) result = singleBook;
-          }
-
-          active = result;
+      if (node?.dataset?.preview) {
+        // Find the book with the matching ID.
+        let result = null;
+        for (const singleBook of books) {
+          if (result) break;
+          if (singleBook.id === node?.dataset?.preview) result = singleBook;
         }
-      }
 
-      // If a matching book was found, update the active book display with its information.
-      if (active) {
-        document.querySelector("[data-list-active]").open = true;
-        document.querySelector("[data-list-blur]").src = active.image;
-        document.querySelector("[data-list-image]").src = active.image;
-        document.querySelector("[data-list-title]").innerText = active.title;
-        document.querySelector("[data-list-subtitle]").innerText = `${
-          authors[active.author]
-        } (${new Date(active.published).getFullYear()})`;
-        document.querySelector("[data-list-description]").innerText =
-          active.description;
+        active = result;
       }
-    });
+    }
+
+    // If a matching book was found, update the active book display with its information.
+    if (active) {
+      document.querySelector("[data-list-active]").open = true;
+      document.querySelector("[data-list-blur]").src = active.image;
+      document.querySelector("[data-list-image]").src = active.image;
+      document.querySelector("[data-list-title]").innerText = active.title;
+      document.querySelector("[data-list-subtitle]").innerText = `${
+        authors[active.author]
+      } (${new Date(active.published).getFullYear()})`;
+      document.querySelector("[data-list-description]").innerText =
+        active.description;
+    }
+  };
 }
