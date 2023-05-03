@@ -1,5 +1,5 @@
-import { books, authors, BOOKS_PER_PAGE } from "./data.js";
-import { matches, page } from "./scripts.js";
+import { books, authors, BOOKS_PER_PAGE } from '/static/js/information/data.js';
+import { matches, page } from '../scripts.js';
 
 /**
  * All listeners

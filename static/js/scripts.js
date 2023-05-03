@@ -1,5 +1,5 @@
-import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
-import { addEventListeners } from './listeners.js';
+import { books, authors, genres, BOOKS_PER_PAGE } from '../js/information/data.js';
+import { addEventListeners } from '../js/listeners/listeners.js';
 
 
 let page = 1;
