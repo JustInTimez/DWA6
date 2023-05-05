@@ -1,8 +1,4 @@
-import {
-  books,
-  authors,
-  BOOKS_PER_PAGE,
-} from "./information/data.js";
+import { books, authors, genres, BOOKS_PER_PAGE } from "../information/data.js";
 import { addEventListeners } from "./listeners/listeners.js";
 import { BookPreviewRenderer } from "./components/renderer.js";
 import { AuthorsForm } from "./components/authors-form.js";
