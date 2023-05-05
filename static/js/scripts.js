@@ -1,12 +1,8 @@
-import {
-  books,
-  authors,
-  BOOKS_PER_PAGE,
-} from "../js/information/data.js";
-import { addEventListeners } from "../js/listeners/listeners.js";
-import { BookPreviewRenderer } from "../js/components/renderer.js";
-import { AuthorsForm } from "../js/components/authors-form.js";
-import { ShowMoreButton } from "../js/components/show-more.js";
+import { books, authors, genres, BOOKS_PER_PAGE } from "../information/data.js";
+import { addEventListeners } from "./listeners/listeners.js";
+import { BookPreviewRenderer } from "./components/renderer.js";
+import { AuthorsForm } from "./components/authors-form.js";
+import { ShowMoreButton } from "./components/show-more.js";
 
 let page = 1;
 export let matches = books;
