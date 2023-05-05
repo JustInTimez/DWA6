@@ -1,9 +1,25 @@
 class BookPreviewRenderer {
   /**
    * Creates a BookPreviewRenderer instance
+   * @param {Object} authors - The list of authors
    */
   constructor(authors) {
     this.authors = authors;
+  }
+
+  /**
+   * The HTML template for rendering a single book preview
+   */
+  get bookPreviewTemplate() {
+    return `
+      <button class="preview" data-preview="{id}">
+        <img class="preview__image" src="{image}">
+        <div class="preview__info">
+          <h3 class="preview__title">{title}</h3>
+          <div class="preview__author">${this.authors[{author}]}</div>
+        </div>
+      </button>
+    `;
   }
 
   /**
@@ -19,23 +35,16 @@ class BookPreviewRenderer {
     const starting = document.createDocumentFragment();
     // Only render the first numPerPage matches
     for (const { author, id, image, title } of matches.slice(0, numPerPage)) {
-      const element = document.createElement("button");
-      element.classList = "preview";
-      element.setAttribute("data-preview", id);
+      const template = this.bookPreviewTemplate
+        .replace("{id}", id)
+        .replace("{image}", image)
+        .replace("{title}", title)
+        .replace("{author}", author);
 
-      element.innerHTML = `
-            <img
-              class="preview__image"
-              src="${image}"
-            />
-            
-            <div class="preview__info">
-              <h3 class="preview__title">${title}</h3>
-              <div class="preview__author">${this.authors[author]}</div>
-            </div>
-          `;
+      const element = document.createElement("div");
+      element.innerHTML = template;
 
-      starting.appendChild(element);
+      starting.appendChild(element.firstChild);
     }
     document.querySelector("[data-list-items]").appendChild(starting);
   }
